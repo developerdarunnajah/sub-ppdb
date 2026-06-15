@@ -1,0 +1,241 @@
+/* --- Form General --- */
+.form-section-title {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.form-info-text {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.text-danger-small {
+  color: red;
+  font-size: 12px;
+}
+
+.required-star {
+  color: red;
+}
+
+/* --- Form Layout (Grid/Flex) --- */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group-large {
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-row-large {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.form-row-bottom {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: flex-end;
+}
+
+.form-col {
+  flex: 1;
+}
+
+.form-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+/* --- Form Controls --- */
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.form-control:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+textarea.form-control {
+  padding: 10px;
+  resize: vertical;
+}
+
+/* --- Buttons --- */
+.btn-check-hp {
+  padding: 8px 15px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-check-hp:hover {
+  background-color: #1976d2;
+}
+
+.btn-submit {
+  padding: 12px 30px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.btn-submit:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.form-action-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* --- Dividers --- */
+.form-divider {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.form-divider-thick {
+  margin: 30px 0;
+  border: 0;
+  border-top: 1px solid #ddd;
+}
+
+/* --- Radio Group (Dokumen) --- */
+.radio-list-container {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px dashed #eee;
+}
+
+.radio-item:last-child {
+  border-bottom: none;
+}
+
+.radio-label {
+  font-weight: 500;
+  flex: 1;
+}
+
+.radio-options {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-option-label {
+  cursor: pointer;
+}
+
+.radio-option-input {
+  margin-right: 5px;
+}
+
+/* --- Pop-up Modal --- */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.popup-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.popup-title {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.popup-desc {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.popup-code-box {
+  padding: 15px;
+  background-color: #f0fdf4;
+  border: 2px dashed #4CAF50;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.popup-code-text {
+  color: #2e7d32;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.btn-close-popup {
+  padding: 12px 25px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+}
+
+.btn-close-popup:hover {
+  background-color: #45a049;
+}

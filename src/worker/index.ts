@@ -2,6 +2,7 @@
 import { Hono } from "hono";
 // Import file routing yang baru dibuat
 import authRouter from "./routes/login";
+import ppdbRoutes from './routes/ppdb';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -12,5 +13,6 @@ app.get("/api", (c) => c.json({ message: "Backend Sub-PPDB API Aktif" }));
 // Semua rute di dalam authRouter otomatis akan diawali dengan '/api'
 // Sehingga endpoint-nya tetap menjadi POST /api/login
 app.route("/api", authRouter);
+app.route('/api/ppdb', ppdbRoutes);
 
 export default app;
