@@ -1,0 +1,77 @@
+.multiperan-container {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 2rem;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.multiperan-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.multiperan-header h2 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.multiperan-header p {
+  color: #666;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.role-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  border-color: #007bff;
+}
+
+.role-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.role-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.role-card p {
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.loading-text, .error-text {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 3rem;
+}
+
+.error-text {
+  color: #dc3545;
+}

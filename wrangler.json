@@ -11,5 +11,13 @@
 	"assets": {
 		"directory": "./dist/client",
 		"not_found_handling": "single-page-application"
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "main_db",
+			"database_id": "9b0e06c1-4fb7-4464-980f-c99c6db53ffb",
+			"remote": true
+		}
+	]
 }
