@@ -1,6 +1,25 @@
 import { Hono } from 'hono';
 
-const ppdb = new Hono<{ Bindings: Env }>();
+// Sesuaikan nama Env jika perlu (tergantung konfigurasi Anda)
+type Env = {
+  Bindings: {
+    DB: D1Database;
+  };
+};
+
+const ppdb = new Hono<Env>();
+
+// ==========================================
+// FUNGSI HELPER: GENERATE 50 KARAKTER ACAK
+// ==========================================
+function generateSantriUC(length: number = 50) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
 
 // ==========================================
 // ENDPOINT MASTER (Lembaga & Wali)
@@ -63,33 +82,58 @@ ppdb.post('/submit', async (c) => {
       fotoBiodata, ijazah, ktpWali, akta, nisn, kk, dokumenTambahan
     } = body;
 
-    if (!namaLengkap || !jenisKelamin || !kewarganegaraan || !alamatLengkap || !hpWali || !namaWali || !lembagaId) {
-      return c.json({ success: false, message: 'Semua data wajib (*) harus diisi' }, 400);
+    // 1. Validasi Kolom Wajib (Sekarang hpWali dan namaWali TIDAK ADA di sini)
+    if (!namaLengkap || !jenisKelamin || !kewarganegaraan || !alamatLengkap || !lembagaId) {
+      return c.json({ success: false, message: 'Data santri, alamat, dan lembaga wajib diisi' }, 400);
     }
 
+    // 2. Logic Pengaturan WNA/WNI
     if (kewarganegaraan === '2') {
       kodeDesa = null; rt = null; rw = null;
     } else if (!kodeDesa) {
       return c.json({ success: false, message: 'Data wilayah (Desa) wajib dipilih untuk WNI' }, 400);
     }
 
+    // Pembersihan Input Wali agar benar-benar menjadi null jika kosong
+    const finalHpWali = (hpWali && hpWali.trim() !== '') ? hpWali.trim() : null;
+    const finalNamaWali = (namaWali && namaWali.trim() !== '') ? namaWali.trim() : null;
+
     const db = c.env.DB;
     const statements = [];
 
-    const waliExist = await db.prepare('SELECT hp_wali FROM wali WHERE hp_wali = ?').bind(hpWali).first();
-    if (!waliExist) {
-      statements.push(db.prepare('INSERT INTO wali (hp_wali, nama_wali) VALUES (?, ?)').bind(hpWali, namaWali));
+    // --- STEP A: CEK DAN INSERT WALI (HANYA JIKA ADA NOMOR HP) ---
+    if (finalHpWali) {
+      const waliExist = await db.prepare('SELECT hp_wali FROM wali WHERE hp_wali = ?').bind(finalHpWali).first();
+      // Jika belum ada di DB, tambahkan wali baru
+      if (!waliExist) {
+        statements.push(db.prepare('INSERT INTO wali (hp_wali, nama_wali) VALUES (?, ?)').bind(finalHpWali, finalNamaWali));
+      }
     }
 
-    const santriUc = crypto.randomUUID(); 
+    // --- STEP B: LOGIK GENERATE SANTRI_UC 50 KARAKTER UNIK ---
+    let santriUc = '';
+    let isUnique = false;
+
+    while (!isUnique) {
+      santriUc = generateSantriUC(50);
+      const checkExist = await db.prepare('SELECT santri_uc FROM santri WHERE santri_uc = ?').bind(santriUc).first();
+      if (!checkExist) {
+        isUnique = true;
+      }
+    }
+
+    // --- STEP C: LOGIK KODE REGISTRASI ---
     const tahun = new Date().getFullYear();
     const countData = await db.prepare('SELECT COUNT(*) as total FROM ikatan_lembaga WHERE lembaga_id = ?').bind(parseInt(lembagaId)).first<{total: number}>();
     
     const nomorUrut = (countData?.total || 0) + 1;
     const stringNomorUrut = String(nomorUrut).padStart(4, '0');
-    const kodeRegistrasi = `${lembagaId}-${tahun}-${stringNomorUrut}`; 
+    const kodeRegistrasi = `${lembagaId}${tahun}${stringNomorUrut}`; 
     const statusAwal = 0; 
 
+    // --- STEP D: MENYUSUN BATCH INSERT ---
+    
+    // Insert Santri (Perhatikan variabel `finalHpWali` yang digunakan)
     statements.push(
       db.prepare(`
         INSERT INTO santri (
@@ -99,13 +143,21 @@ ppdb.post('/submit', async (c) => {
       `).bind(
         santriUc, kodeRegistrasi, namaLengkap, parseInt(jenisKelamin), 
         parseInt(kewarganegaraan), kodeDesa || null, rt ? parseInt(rt) : null, 
-        rw ? parseInt(rw) : null, alamatLengkap, hpWali, statusAwal
+        rw ? parseInt(rw) : null, alamatLengkap, finalHpWali, statusAwal
       )
     );
 
-    statements.push(db.prepare('INSERT INTO ikatan_lembaga (santri_uc, lembaga_id) VALUES (?, ?)').bind(santriUc, parseInt(lembagaId)));
+    // Insert ke tabel dibuat (Logika monitoring export tanggal)
+    statements.push(
+      db.prepare('INSERT INTO dibuat (kode_registrasi) VALUES (?)').bind(kodeRegistrasi)
+    );
 
-    // Tabel Dokumen perlu dipastikan ada di database Anda
+    // Insert Ikatan Lembaga
+    statements.push(
+      db.prepare('INSERT INTO ikatan_lembaga (santri_uc, lembaga_id) VALUES (?, ?)').bind(santriUc, parseInt(lembagaId))
+    );
+
+    // Insert Dokumen
     statements.push(
       db.prepare(`
         INSERT INTO dokumen (santri_uc, foto_biodata, ijazah, ktp_wali, akta, nisn, kk, dokumen_tambahan)
@@ -116,10 +168,12 @@ ppdb.post('/submit', async (c) => {
       )
     );
 
+    // --- STEP E: EKSEKUSI SEMUA QUERY BATCH ---
     await db.batch(statements);
 
     return c.json({ success: true, message: 'Pendaftaran berhasil disimpan', data: { kode_registrasi: kodeRegistrasi } }, 201);
   } catch (error: any) {
+    console.error("Error saat submit PPDB:", error);
     return c.json({ success: false, message: 'Gagal menyimpan data pendaftaran', error: error.message }, 500);
   }
 });

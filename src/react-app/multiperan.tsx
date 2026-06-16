@@ -58,7 +58,10 @@ const Multiperan: React.FC = () => {
   const handleRoleSelect = (roleName: string) => {
     if (roleName === 'client_ppdb') {
       navigate('/dashboardClientPPDB');
-    } else {
+    } else if (roleName === 'admin_ppdb') {
+      navigate('/dashboardAdminPPDB');
+    } 
+    else {
       alert(`Dasbor untuk peran ${roleName} belum tersedia.`);
     }
   };

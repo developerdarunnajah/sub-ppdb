@@ -296,16 +296,16 @@ const DashboardClientPPDB: React.FC = () => {
                 
                 <div className="form-row-bottom">
                   <div className="form-col">
-                    <label className="form-label">Nomor HP Wali <span className="required-star">*</span></label>
+                    <label className="form-label">Nomor HP Wali</label>
                     <div className="form-input-group">
-                      <input type="text" value={hpWali} onChange={(e) => setHpWali(e.target.value)} placeholder="Masukkan nomor HP wali" className="form-control" style={{ flex: 1 }} required />
+                      <input type="text" value={hpWali} onChange={(e) => setHpWali(e.target.value)} placeholder="Masukkan nomor HP wali" className="form-control" style={{ flex: 1 }} />
                       <button type="button" onClick={handleCheckWali} className="btn-check-hp">Periksa</button>
                     </div>
                   </div>
                   
                   <div className="form-col">
-                    <label className="form-label">Nama Wali <span className="required-star">*</span></label>
-                    <input type="text" value={namaWali} onChange={(e) => setNamaWali(e.target.value)} placeholder="Masukkan nama wali" disabled={isWaliFound} className="form-control" required />
+                    <label className="form-label">Nama Wali</label>
+                    <input type="text" value={namaWali} onChange={(e) => setNamaWali(e.target.value)} placeholder="Masukkan nama wali" disabled={isWaliFound} className="form-control" />
                   </div>
                 </div>
 

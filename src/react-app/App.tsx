@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './login';
 import Multiperan from './multiperan';
 import DashboardClientPPDB from './dashboardClientPPDB'; // <--- Import ini
+import DashboardAdminPPDB from './dashboardAdminPPDB';
 
 function App() {
   return (
@@ -9,9 +10,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/multiperan" element={<Multiperan />} />
-        
-        {/* Tambahkan rute untuk Dashboard Client */}
         <Route path="/dashboardClientPPDB" element={<DashboardClientPPDB />} />
+        <Route path="/dashboardAdminPPDB" element={<DashboardAdminPPDB />} />
       </Routes>
     </Router>
   );
